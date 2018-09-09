@@ -8,11 +8,20 @@ class SignupForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
 
+    def clean(self):
+        form_data=self.cleaned_data
+        if User.objects.filter(username=form_data['username']).exists():
+            forms.ValidationError("*** User already exists")
 
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = '__all__'
+
+    def clean(self):
+        form_data=self.cleaned_data
+        if Category.objects.filter(name=form_data['name']).exists():
+            forms.ValidationError("*** Category already exists")
 
 
 class TopicForm(forms.ModelForm):
@@ -24,10 +33,22 @@ class TopicForm(forms.ModelForm):
         max_length=2000,
         help_text='Maximum 200 words'
     )
+    title=forms.CharField(widget=forms.Textarea(
+            attrs={'rows': 5, 'placeholder': 'What is your mind?'}
 
+        ),
+        max_length=2000,
+        help_text='Maximum 200 words')
     class Meta:
         model = Topic
-        fields = ['subject', 'message']
+        fields = ['subject', 'title','message']
+
+    def clean_subject(self):
+        subject=self.cleaned_data['subject']
+        if Topic.objects.filter(subject=subject).exists():
+            raise forms.ValidationError('***Topic already Exists')
+        return subject
+
 
 
 class PostForm(forms.ModelForm):

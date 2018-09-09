@@ -107,6 +107,7 @@ def new_topic(request, pk):
             topic.starter = request.user
             topic.save()  # add topic
             Post.objects.create(
+                title=form.cleaned_data['title'],
                 message=form.cleaned_data.get('message'),
                 topic=topic,
                 created_by=request.user
