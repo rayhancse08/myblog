@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block breadcrumb %}
+  <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'category_list' %}">Categories</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'category_topics' topic.category.pk %}">{{ topic.category.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ topic.subject }}</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="col-sm-4">
+
+  </div>
+    <br>
+{% for post in posts %}
+    <div class="row">
+
+    <div class="col-sm-6">
+    <strong>
+        <i class="fa fa-user-circle-o"></i> {{ post.created_by }}
+    </strong>
+    <i class="fa fa-calendar"></i> {{ post.created_at|naturaltime }}
+        <br>
+    <strong>            {{ post.title }}
+  </strong>
+
+        <br>
+        {{ post.message|linebreaks|urlize|truncatewords:50 }}<a href="{% url 'comments' topic.category.pk topic.pk post.pk %}">...................More Read</a>
+
+
+    </div>
+        <br>
+
+        <div class="col-sm-6">
+        </div>
+</div>
+  <hr>
+    {% endfor %}
+    <div class="row">
+    <div class="col-sm-12">
+         {% if user.is_authenticated %}
+        <a href="{% url 'add_post' topic.category.pk topic.pk %}" class="btn btn-primary btn-sm" role="button"><i class="fa fa-plus-circle"> Add Post</i></a>
+        {% endif %}
+    </div>
+    </div>
+
+    <div class="pagination" style="padding-left: 30%">
+    {% include 'includes/pagination.html' %}
+    </div>
+
+
+{% endblock %}

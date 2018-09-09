@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h2>Reply Post</h2>
+<form method="post" novalidate>
+{% csrf_token %}
+{% include 'includes/form.html' %}
+    <button type="submit" class="btn btn-primary">Reply Post</button>
+<a href="{% url 'comments' post.topic.category.pk post.topic.pk post.pk %}" class="btn btn-outline-dark" role="button">Not Now</a>
+</form>
+{% endblock %}

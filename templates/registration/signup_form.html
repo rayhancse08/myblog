@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-12" style="padding-left: 25%;padding-right: 25%">
+      <h2>Sign up</h2>
+      <form method="post" novalidate>
+        {% csrf_token %}
+         {% include 'includes/form.html' %}
+          <br>
+        <button type="submit" class="btn btn-success">Sign up</button>
+      </form>
+    </div>
+  </div>
+
+
+{% endblock %}

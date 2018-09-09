@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+    <h2>Add Topic</h2>
+<form method="post" novalidate>
+{% csrf_token %}
+{% include 'includes/form.html' %}
+    <button type="submit" class="btn btn-primary">Create Topic</button>
+<a href="{% url 'category_topics' category.pk %}" class="btn btn-outline-dark" role="button">Not Now</a>
+
+</form>
+
+{{ queryset }}
+{% endblock %}

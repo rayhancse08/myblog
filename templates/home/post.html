@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block breadcrumb %}
+  <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'category_list' %}">Categories</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'category_topics' topic.category.pk %}">{{ topic.category.name }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'topic_posts' topic.category.pk topic.pk %}">{{ topic.subject }}</a></li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+
+    <div class="col-sm-10">
+        <h3>{{ post.title }}</h3>
+
+    <strong>
+        <i class="fa fa-user-circle-o"></i>{{ post.created_by }} <i class="fa fa-calendar"></i> {{ post.created_at|naturaltime }}
+    </strong>
+        <br>
+    {{ post.message|linebreaks|urlize }}
+
+    <div id="post_like" class="collapse">
+    {% for like in post.likes.all %}
+       {{ like.liked_by }}
+    {% endfor %}
+  </div>
+        {% if  post.likes.count %}
+            <i class="fa fa-thumbs-up" style="font-size: 18px"><button  class="btn-link" data-toggle="collapse" data-target="#post_like"><strong> {{ post.likes.count }}</strong></button></i>
+
+        {% endif %}
+
+
+    {% if post.comments.count %}
+    <i class="fa fa-comments-o" style="font-size: 18px"><strong> {{ post.comments.count }}</strong></i>
+    {% endif %}
+
+    </div>
+
+    <div class="col-sm-2 text-right">
+
+         {% if post.created_by == request_user and user.is_authenticated %}
+        <a href="{% url 'edit_post' topic.category.pk topic.pk post.pk %}"><i class="fa fa-edit" style="font-size: 18px"></i></a>
+        <a href="{% url 'delete_post' topic.category.pk topic.pk post.pk %}"><i class="fa fa-trash-o" style="font-size: 18px"></i> </a>
+
+        {% endif %}
+    </div>
+    </div>
+
+
+<hr>
+
+
+
+<div class="row">
+
+<div class="col-sm-6">
+    <a href="{% url 'post_like' topic.category.pk topic.pk post.pk %}">  <i class="fa fa-thumbs-up" style="font-size: 18px"> Like</i> </a>
+</div>
+    <div class="col-sm-6">
+        <a href="{% url 'reply_post' topic.category.pk topic.pk post.pk %}"  role="button"><i class="fa fa-commenting" style="font-size:18px"> Comment</i></a>
+    </div>
+
+</div>
+    <hr>
+
+
+{% for comment in comments %}
+
+
+<div class="row">
+<div class="col-sm-10">
+    <strong> <i class="fa fa-user-circle-o"></i> {{ comment.created_user }}  <i class="fa fa-calendar"></i> {{ comment.created_time }}</strong>
+     <br>
+
+    {{ comment.message }}
+
+
+
+<div id="comment_like{{ comment.pk }}" class="collapse">
+<hr>
+    {% for like in comment.comment_likes.all %}
+       {{ like.comment_liked_by }}
+        <br>
+    {% endfor %}
+<hr>
+  </div>
+
+    {% if comment.comment_likes.count %}
+
+        <i class="fa fa-thumbs-up" style="font-size: 18px"><button  class=" btn-link" data-toggle="collapse" data-target="#comment_like{{ comment.pk }}"><strong> {{ comment.comment_likes.count  }}</strong></button></i>
+
+    {% endif %}
+
+{% if comment.comment_replies.count %}
+        <i class="fa fa-comments-o" style="font-size: 18px"><button  class=" btn-link" data-toggle="collapse" data-target="#comment_reply{{ comment.pk }}"><strong> {{ comment.comment_replies.count  }}</strong></button></i>
+
+{% endif %}
+<br>
+<div id="comment_reply{{ comment.pk }}" class="collapse text-center">
+    {% for comment_reply in comment.comment_replies.all %}
+
+        <i class="fa fa-user-circle-o"> {{ comment_reply.replied_by }}</i>
+        <i class="fa fa-calendar">{{ comment_reply.reply_time|naturaltime }} </i>
+        <br>
+
+       {{ comment_reply.reply_message}}
+
+        {% if user.is_authenticated  and comment_reply.replied_by == request_user%}
+          <a href="{% url 'comment_reply_update' topic.category.pk topic.pk post.pk comment.pk comment_reply.pk %}"><i class="fa fa-edit" style="font-size: 18px"></i> </a>
+            <a href="{% url 'comment_reply_delete' topic.category.pk topic.pk post.pk comment.pk comment_reply.pk %}"><i class="fa fa-trash" style="font-size: 18px"></i> </a>
+        {% endif %}
+        <br>
+    {% endfor %}
+  </div>
+
+
+
+
+   <a href="{% url 'comment_like' topic.category.pk topic.pk post.pk comment.pk %}"><i class="fa fa-thumbs-up">Like</i></a>
+<a href="{% url 'comment_reply' topic.category.pk topic.pk post.pk comment.pk %}"><i class="fa fa-comment-o">Comment</i></a>
+</div>
+
+    <br>
+<div class="col-sm-2 text-right">
+    {% if comment.created_user == request_user and user.is_authenticated %}
+        <a href="{% url 'edit_comment' topic.category.pk topic.pk post.pk comment.pk %}"><i class="fa fa-edit" style="font-size: 18px"></i> </a>
+        <a href="{% url 'delete_comment' topic.category.pk topic.pk post.pk comment.pk %}"><i class="fa fa-trash-o" style="font-size: 18px"></i> </a>
+
+        {% endif %}
+</div>
+</div>
+
+
+
+    <hr>
+    {% endfor %}
+
+
+    <div class="pagination" style="padding-left: 30%">
+    {% include 'includes/pagination.html' %}
+    </div>
+
+
+
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/blog.js' %}"></script>
+
+{% endblock %}

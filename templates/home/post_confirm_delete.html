@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#">My Quizzes</a></li>
+      <li class="breadcrumb-item"><a href="#">{{ post.title }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Confirm deletion</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">Confirm deletion</h2>
+  <p class="lead">Are you sure you want to delete the post <strong>"{{ quiz.name }}"</strong>? There is no going back.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, I'm sure</button>
+    <a href="{% url 'comments' post.topic.category.pk post.topic.pk post.pk%}"  role="button"><i class="fa fa-close" style="font-size:36px"></i></a>
+
+  </form>
+{% endblock %}

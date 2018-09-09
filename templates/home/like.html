@@ -1,0 +1,17 @@
+
+
+   {% for like in post_likes %}
+
+       {{ like.liked_by }}
+<br>
+
+    {% endfor %}
+
+    {% for like in comment_likes %}
+
+        {{ like.comment_liked_by }} Hossain
+        <br>
+
+    {% endfor %}
+
+

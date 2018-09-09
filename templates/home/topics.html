@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block breadcrumb %}
+  <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'category_list' %}">Categories</a></li>
+      <li class="breadcrumb-item">{{ category }}</li>
+
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+<a href="{% url 'create_topic' category.pk %}" class="btn btn-primary btn-sm" role="button" data-url="{% url 'create_topic' category.pk %}"><i class="fa fa-plus-circle"> Add Topic</i> </a>
+
+    {% endif %}
+
+    <br>
+<table class="table table-striped mb-4">
+    <thead class="thead-inverse">
+      <tr>
+        <th><i class="fa fa-tag"></i> Topic</th>
+        <th><i class="fa fa-user-circle"></i>  Starter</th>
+        <th><i class="fa fa-file-text"></i> Posts</th>
+        <th><i class="fa fa-eye"></i> Views</th>
+        <th><i class="fa fa-clock"></i> Last Update</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for topic in topics %}
+
+        {% url 'topic_posts' category.pk topic.pk as topic_url %}
+        <tr>
+          <td>
+            <p class="mb-0">
+              <a href="{{ topic_url }}">{{ topic.subject }}</a>
+            </p>
+            <small class="text-muted">
+              Pages:
+              {% for i in topic.get_page_range %}
+                <a href="{{ topic_url }}?page={{ i }}">{{ i }}</a>
+              {% endfor %}
+              {% if topic.has_many_pages %}
+              ... <a href="{{ topic_url }}?page={{ topic.get_page_count }}">Last Page</a>
+              {% endif %}
+            </small>
+          </td>
+          <td class="align-middle">{{ topic.starter.username }}</td>
+          <td class="align-middle">{{ topic.replies }}</td>
+          <td class="align-middle">{{ topic.views }}</td>
+          <td class="align-middle">{{ topic.last_updated|naturaltime }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+    <div class="pagination" style="padding-left: 30%">
+    {% include 'includes/pagination.html' %}
+    </div>
+
+    <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/blog.js' %}"></script>
+{% endblock %}

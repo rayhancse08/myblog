@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block  content %}
+
+   <h2>Edit Reply</h2>
+<form method="post" novalidate>
+{% csrf_token %}
+    {% include 'includes/form.html' %}
+
+    <button type="submit" class="btn btn-primary btn-sm">Edit Reply</button>
+<a href="{% url 'comments' comment_reply.comment.post.topic.category.pk comment_reply.comment.post.topic.pk comment_reply.comment.post.pk %}" class="btn btn-outline-dark btn-sm" role="button">Not Now</a>
+
+
+
+
+</form>
+
+{% endblock %}

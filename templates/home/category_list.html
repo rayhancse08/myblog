@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block content %}
+
+
+      <ol class="breadcrumb my-4">
+        <li class="breadcrumb-item active">Categories</li>
+      </ol>
+      <table class="table">
+        <thead class="thead-inverse">
+          <tr>
+            <th><i class="fa fa-leaf"></i> Categories</th>
+            <th><i class="fa fa-file-text-o"></i> Posts</th>
+            <th> <i class="fa fa-tag"></i> Topics </th>
+            <th><i class="fa fa-clock-o"></i> Last Post</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for category in categories %}
+            <tr>
+              <td>
+                {{ category.name }}
+                  <small class="text-muted d-block"><a href="{{ category.get_absolute_url }}">{{ category.description }}</a></small>
+              </td>
+              <td class="align-middle">{{ category.get_posts_count }}</td>
+              <td class="align-middle">{{ category.topics.count }}</td>
+
+
+             </td>
+
+              <td class="align-middle">
+               {% with post=category.get_last_post %}
+                  {% if post %}
+                   <small>
+                  <a href="{% url 'category_topics' category.pk %}">
+                    By {{ post.created_by.username }} {{ post.created_at|naturaltime }}
+                  </a>
+                </small>
+              {% else %}
+                <small class="text-muted">
+                  <em>No posts yet.</em>
+                </small>
+                   {% endif %}
+                {% endwith %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    <div class="pagination" style="padding-left: 40%">
+    {% include 'includes/pagination.html' %}
+    </div>
+
+{% endblock %}
