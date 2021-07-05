@@ -87,11 +87,11 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '5432',
         'USER': 'postgres',
-        'PASSWORD': 'rayhan0820',
+        'PASSWORD': 'admin',
 
 }}
 
-
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
