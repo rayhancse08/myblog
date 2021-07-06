@@ -41,10 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'crispy_forms',
     'rest_framework',
+    'graphene_django',
     'home',
     'api'
 
 ]
+
+GRAPHENE = {
+  "SCHEMA": "api.schema.schema",
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
